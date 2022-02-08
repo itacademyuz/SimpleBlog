@@ -8,7 +8,7 @@ const postSchema = Schema({
     tags: [String],
     selectedFile: String,
     likeCount:{
-        type: String,
+        type: Number,
         default: 0
     }
 },{timestamps: true})

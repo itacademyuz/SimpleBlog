@@ -1,0 +1,6 @@
+const CREATE = 'CREATE'
+const READ = 'FETCH_ALL'
+const UPDATE = 'UPDATE'
+const DELETE = 'DELETE'
+const LIKE = 'LIKE'
+export {CREATE, READ, UPDATE, DELETE, LIKE}

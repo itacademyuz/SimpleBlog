@@ -1,27 +1,41 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import useStyles from './styles'
 import FileBase from 'react-file-base64'
-import {useDispatch} from 'react-redux'
-import {createPost} from '../../actions/posts'
-const Form = ()=>{
+import {useDispatch, useSelector} from 'react-redux'
+import {createPost, updatePost} from '../../actions/posts'
+
+const Form = ({currentId, setCurrentId})=>{
         const [postData, setPostData] = useState({
             creator: '', title: '', message: '', tags: '', selectedFile: ''
         })
+        const post = useSelector((state)=>currentId? state.posts.find((p)=>p._id===currentId):null)
         const classes = useStyles()
         const dispatch = useDispatch()
+        useEffect(()=>{
+            if(post) setPostData(post)
+        }, [post])
+        const clear = ()=>{
+            setCurrentId(null);
+            setPostData({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
+        }
         const handleSubmit = (e)=>{
             e.preventDefault()
-            dispatch(createPost(postData))
+            if(currentId === null){
+                dispatch(createPost(postData))
+                clear()
+            }else{
+                dispatch(updatePost(currentId,postData))
+                clear()
+            }
+            
         }
-        const clear = ()=>{
-
-        }
+        
         return (
              <div>
                  <Paper className={classes.paper}>
                     <form autoComplete='off' noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-                        <Typography variant='h6'>Creating a memory</Typography>
+                        <Typography variant='h6'>{!currentId? `Creating`:`Editing`} a memory </Typography>
                         <TextField 
                             name='creator' 
                             variant='outlined' 
@@ -52,7 +66,7 @@ const Form = ()=>{
                             label="Tags"
                             fullWidth
                             value={postData.tags}
-                            onChange={(e)=> setPostData({...postData, tags: e.target.value})}
+                            onChange={(e)=> setPostData({...postData, tags: e.target.value.split(',')})}
                         />
                         <div className={classes.fileInput}>
                             <FileBase 
@@ -61,7 +75,7 @@ const Form = ()=>{
                                 onDone={({base64})=>setPostData({...postData, selectedFile: base64})}
                             />
                         </div>
-                            <Button className={classes.buttonSubmit} variant="contained" color='primary' size='large' type='submit' fullWidth>Create Post</Button>
+                            <Button className={classes.buttonSubmit} variant="contained" color='primary' size='large' type='submit' fullWidth>{currentId?`Edit`:`Create`} Post</Button>
                             <Button className={classes.buttonSubmit} variant="contained" color='secondary' size='small' onClick={clear} fullWidth>Clear</Button>
                         
                     </form>

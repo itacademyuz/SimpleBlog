@@ -16,3 +16,22 @@ export const createPost = async(req, res)=>{
     await PostMessage.create(newPost)
     res.status(201).json(newPost)
 }
+export const updatePost = async(req, res)=>{
+    const {id} = req.params
+    const post = req.body
+    const editedPost = await PostMessage.findByIdAndUpdate(id, post, {new: true})
+    res.json(editedPost)
+}
+export const deletePost = async(req, res)=>{
+    const {id} = req.params
+    const deletedPost = await PostMessage.findByIdAndDelete(id)
+    const message = deletedPost? 'success':'error'
+    res.json({message})
+}
+export const likePost = async(req, res)=>{
+    const {id} = req.params
+    const post = await PostMessage.findById(id)
+    const {likeCount} = post
+    const updatedPost = await PostMessage.findOneAndUpdate(id, {likeCount: likeCount+1}, {new: true})
+    res.json(updatedPost)
+}

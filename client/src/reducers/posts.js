@@ -1,10 +1,12 @@
-import { CREATE, READ, UPDATE, DELETE} from "../constants/actionTypes";
+import { CREATE, READ, UPDATE, DELETE, LIKE} from "../constants/actionTypes";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default  (posts=[], action)=>{
     switch(action.type){
         case READ:
             return action.payload
+        case LIKE:
+            return posts.map((p)=>(p._id===action.payload._id? action.payload:p))
         case CREATE:
             return [...posts, action.payload];
         case UPDATE:

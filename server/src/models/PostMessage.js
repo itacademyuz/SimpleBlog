@@ -4,12 +4,13 @@ const Schema = mongoose.Schema
 const postSchema = Schema({
     title: String,
     message: String,
+    name: String,
     creator: String,
     tags: [String],
     selectedFile: String,
-    likeCount:{
-        type: Number,
-        default: 0
+    likes:{
+        type: [String],
+        default: []
     }
 },{timestamps: true})
 const PostMessage = mongoose.model('PostMessage', postSchema)

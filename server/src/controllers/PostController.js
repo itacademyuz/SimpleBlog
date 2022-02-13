@@ -9,7 +9,7 @@ export const getPosts = async(req, res)=>{
 }
 export const createPost = async(req, res)=>{
     const post = req.body
-    const newPost = new PostMessage(post)
+    const newPost = new PostMessage({...post, creator: req.userId})
     if(!newPost){
         return res.status(409).json('Cannot create it')
     }
@@ -30,8 +30,15 @@ export const deletePost = async(req, res)=>{
 }
 export const likePost = async(req, res)=>{
     const {id} = req.params
+    if(!req.userId) return res.json({message: "You're not authenticated"})
+    
     const post = await PostMessage.findById(id)
-    const {likeCount} = post
-    const updatedPost = await PostMessage.findOneAndUpdate(id, {likeCount: likeCount+1}, {new: true})
+    const index = post.likes.findIndex((id)=>id===String(req.userId))
+    if(index===-1){
+        post.likes.push(req.userId)
+    }else{
+        post.likes = post.likes.filter((id)=>id!==String(req.userId))
+    }
+    const updatedPost = await PostMessage.findOneAndUpdate(id, post, {new: true})
     res.json(updatedPost)
 }

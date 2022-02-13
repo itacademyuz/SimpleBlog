@@ -3,4 +3,6 @@ const READ = 'FETCH_ALL'
 const UPDATE = 'UPDATE'
 const DELETE = 'DELETE'
 const LIKE = 'LIKE'
-export {CREATE, READ, UPDATE, DELETE, LIKE}
+const AUTH = 'AUTH'
+const LOGOUT = 'LOGOUT'
+export {CREATE, READ, UPDATE, DELETE, LIKE, AUTH, LOGOUT}
